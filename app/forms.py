@@ -20,3 +20,8 @@ class DocumentationForm(FlaskForm):
     category = StringField('Category', validators=[DataRequired()])
     content = TextAreaField('Content (Markdown)', validators=[DataRequired()])
     submit = SubmitField('Save')
+
+
+class UpdateProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=100)])
+    submit = SubmitField('Update')

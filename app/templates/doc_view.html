@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ doc.title }}</h2>
+<p>Автор: <a href=\"{{ url_for('main.user_profile', user_id=doc.created_by) }}\">{{ doc.author.username }}</a></p>
+<p class="text-muted">Категория: {{ doc.category }}</p>
+<p class="text-muted">
+    Автор: 
+    <a href="{{ url_for('main.user_profile', user_id=doc.author.id) }}">
+        {{ doc.author.username }}
+    </a>
+</p>
+<hr>
+<div>
+    {{ doc.content }}
+</div>
+{% endblock %}

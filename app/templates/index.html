@@ -1,14 +1,39 @@
 
 {% extends 'base.html' %}
 {% block content %}
-<h1>Документация</h1>
-<ul class="list-group">
+<h1 class="mb-4">📚 Все документации</h1>
+
+<form method="GET" action="{{ url_for('main.index') }}" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Поиск по заголовку..." value="{{ request.args.get('q', '') }}">
+        <button type="submit" class="btn btn-outline-primary">🔍 Найти</button>
+    </div>
+</form>
+
+{% if docs %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for doc in docs %}
-        <li class="list-group-item">
-            <h5>{{ doc.title }}</h5>
-            <p><strong>Категория:</strong> {{ doc.category }}</p>
-            <pre>{{ doc.content[:200] }}...</pre>
-        </li>
+        <div class="col">
+            <div class="card card-hover h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ doc.title }}</h5>
+                    <p class="card-text text-muted">Категория: {{ doc.category }}</p>
+                    <p class="card-text">{{ doc.content[:150] }}...</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        Автор: 
+                        <a href="{{ url_for('main.user_profile', user_id=doc.author.id) }}">
+                            {{ doc.author.username }}
+                        </a>
+                    </small>
+                    <a href="{{ url_for('main.view_doc', doc_id=doc.id) }}" class="btn btn-sm btn-outline-primary">Читать →</a>
+                </div>
+            </div>
+        </div>
     {% endfor %}
-</ul>
+    </div>
+{% else %}
+    <p>Документации не найдены.</p>
+{% endif %}
 {% endblock %}
