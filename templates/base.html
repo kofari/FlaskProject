@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Booking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">Sketch London</a>
+            <div class="nav-links">
+                <a href="{{ url_for('gallery') }}">Галерея</a>  <!-- Добавленная строка -->
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('booking') }}">Бронирование</a>
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin') }}">Админ-панель</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Выйти</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Вход</a>
+                    <a href="{{ url_for('register') }}">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Элементы формы
+    const dateInput = document.getElementById('date');
+    const timeSelect = document.getElementById('time');
+    const guestsInput = document.getElementById('guests');
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+
+    // Элементы предпросмотра
+    const previewDate = document.getElementById('preview-date');
+    const previewTime = document.getElementById('preview-time');
+    const previewGuests = document.getElementById('preview-guests');
+    const previewName = document.getElementById('preview-name');
+    const datePreview = document.getElementById('date-preview');
+
+    // Управление количеством гостей
+    document.getElementById('decrease-guests').addEventListener('click', () => {
+        if (guestsInput.value > 1) {
+            guestsInput.value = parseInt(guestsInput.value) - 1;
+            updateGuestsPreview();
+        }
+    });
+
+    document.getElementById('increase-guests').addEventListener('click', () => {
+        if (guestsInput.value < 12) {
+            guestsInput.value = parseInt(guestsInput.value) + 1;
+            updateGuestsPreview();
+        }
+    });
+
+    // Обновление предпросмотра
+    function updateGuestsPreview() {
+        const guests = guestsInput.value;
+        document.getElementById('guests-count').textContent =
+            guests + (guests == 1 ? ' гость' : guests < 5 ? ' гостя' : ' гостей');
+        previewGuests.textContent = guests + (guests == 1 ? ' гость' : guests < 5 ? ' гостя' : ' гостей');
+    }
+
+    // Обновление предпросмотра даты
+    dateInput.addEventListener('change', function() {
+        if (this.value) {
+            const date = new Date(this.value);
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            datePreview.textContent = date.toLocaleDateString('ru-RU', options);
+
+            const formattedDate = date.toLocaleDateString('ru-RU', {
+                day: '2-digit', month: '2-digit', year: 'numeric'
+            });
+            previewDate.textContent = formattedDate;
+        }
+    });
+
+    // Обновление предпросмотра времени
+    timeSelect.addEventListener('change', function() {
+        if (this.value) {
+            previewTime.textContent = this.value;
+        }
+    });
+
+    // Обновление предпросмотра имени
+    nameInput.addEventListener('input', function() {
+        previewName.textContent = this.value || 'Имя';
+    });
+
+    // Маска для телефона
+    phoneInput.addEventListener('input', function() {
+        let phone = this.value.replace(/\D/g, '');
+        if (phone.length > 0) {
+            phone = phone.match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
+            this.value = !phone[2] ? phone[1] :
+                '+7 (' + phone[2] + (phone[3] ? ') ' + phone[3] : '') +
+                (phone[4] ? '-' + phone[4] : '');
+        }
+    });
+
+    // Установка минимальной и максимальной даты
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setMonth(today.getMonth() + 3);
+
+    dateInput.min = formatDate(today);
+    dateInput.max = formatDate(maxDate);
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Инициализация значений
+    updateGuestsPreview();
+    previewName.textContent = nameInput.value || 'Имя';
+
+    // Анимация при отправке формы
+    const bookingForm = document.getElementById('booking-form');
+    bookingForm.addEventListener('submit', function(e) {
+        const submitBtn = document.querySelector('.booking-btn');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Обработка...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+</body>
+</html>

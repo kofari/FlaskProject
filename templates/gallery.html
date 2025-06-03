@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="gallery-section">
+    <h2>Наши залы</h2>
+    <p class="subtitle">Выберите зал для вашего мероприятия</p>
+
+    <div class="halls-grid">
+        {% for hall in halls %}
+        <a href="{{ url_for('hall', hall_name=hall.name) }}" class="hall-card">
+            <div class="hall-image" style="background-image: url('{{ hall.image }}');"></div>
+            <div class="hall-info">
+                <h3>{{ hall.name }}</h3>
+                <p>{{ hall.description[:100] }}...</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

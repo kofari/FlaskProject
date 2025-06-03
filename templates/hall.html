@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hall-detail">
+    <h2>{{ hall.name }}</h2>
+    <div class="hall-main-image" style="background-image: url('{{ hall.image }}');"></div>
+    
+    <div class="hall-description">
+        <p>{{ hall.description }}</p>
+        <p><strong>Вместимость:</strong> {{ hall.capacity }}</p>
+        
+        <h3>Особенности:</h3>
+        <ul class="features-list">
+            {% for feature in hall.features %}
+            <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <h3>Дополнительные фотографии</h3>
+    <div class="hall-gallery">
+        {% for image in hall.more_images %}
+        <div class="gallery-item" style="background-image: url('{{ image }}');"></div>
+        {% endfor %}
+    </div>
+
+    <div class="book-this-hall">
+        <a href="{{ url_for('booking') }}" class="btn">
+            <i class="fas fa-calendar-check"></i> Забронировать этот зал
+        </a>
+    </div>
+</section>
+{% endblock %}
