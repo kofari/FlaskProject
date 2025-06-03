@@ -144,3 +144,25 @@ def user_edit_doc(doc_id):
         flash('Документация обновлена')
         return redirect(url_for('main.user_profile', user_id=current_user.id))
     return render_template('doc_edit.html', form=form)
+
+
+@bp.route('/admin/delete_user/<int:user_id>')
+@login_required
+def delete_user(user_id):
+    # Only admin (by email) can delete users
+    if not current_user.is_authenticated or current_user.email != 'admin@docuhub.com':
+        flash('Доступ запрещён')
+        return redirect(url_for('main.index'))
+    user = User.query.get_or_404(user_id)
+    if user.email == 'admin@docuhub.com':
+        flash('Нельзя удалить администратора')
+        return redirect(url_for('main.admin_panel'))
+    # Delete user's documents first
+    docs = Documentation.query.filter_by(created_by=user.id).all()
+    for doc in docs:
+        db.session.delete(doc)
+    db.session.delete(user)
+    db.session.commit()
+    flash('Пользователь и его посты удалены')
+    return redirect(url_for('main.admin_panel'))
+
