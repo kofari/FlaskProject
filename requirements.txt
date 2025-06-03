@@ -1,5 +1,9 @@
 Flask==2.3.2
-Flask-SQLAlchemy==3.0.2
+Flask-Login==0.6.2
+Flask-WTF==1.0.1
 Flask-Migrate==4.0.4
-gunicorn==20.1.0
-psycopg2-binary==2.9.6
+Flask-SQLAlchemy==3.0.2
+psycopg2-binary==2.9.6      # если вы планируете подключаться к Postgres
+email-validator==2.2.0
+dnspython==2.7.0            # остался из email-validator
+Gunicorn==20.1.0
