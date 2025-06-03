@@ -1,0 +1,47 @@
+
+body {
+    background: #f8f9fa;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.card-hover:hover {
+    transform: scale(1.02);
+    transition: 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.animated {
+    animation-duration: 0.6s;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Additional interactive styles */
+
+.btn:hover {
+    transform: translateY(-2px);
+    transition: 0.2s ease-in-out;
+}
+.card-hover {
+    transition: transform 0.3s ease;
+}
+.card-hover:hover {
+    transform: scale(1.05);
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+}
+.pulse {
+    animation: pulse 2s infinite;
+}
