@@ -1,1 +1,5 @@
-email-validator
+Flask==2.3.2
+Flask-SQLAlchemy==3.0.2
+Flask-Migrate==4.0.4
+gunicorn==20.1.0
+psycopg2-binary==2.9.6
